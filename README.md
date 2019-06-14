@@ -1,4 +1,6 @@
-# Project : Autonomous Landing Drone - Sejong University 2019 - License: iNCSL - Author : Viet
+### Project : Autonomous Landing Drone - Sejong University 2019 
+License: iNCSL 
+Author : Viet
 Email: hoangvietdo@sju.ac.kr
 
 # What is ROS/MAVROS ? #
@@ -7,7 +9,7 @@ http://www.ros.org/about-ros
 
 # What is jMAVSim and Gazebo? Which one should we choose for simulation ? #
 
-
+...
 
 # How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  #
 For more detail and explaination please visit:
