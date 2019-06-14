@@ -1,4 +1,4 @@
-Project : Autonomous Landing Drone - Sejong University 2019 - License: iNCSL - Author : Viet
+### Project : Autonomous Landing Drone - Sejong University 2019 - License: iNCSL - Author : Viet
 Email: hoangvietdo@sju.ac.kr
 
 ### What is ROS/MAVROS ? ###
@@ -9,7 +9,7 @@ http://www.ros.org/about-ros
 
 
 
-####### How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  ########
+### How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  ###
 
 ### For more detail and explaination please visit the reference ###
 	Reference : http://wiki.ros.org/melodic/Installation/Ubuntu 
@@ -17,14 +17,14 @@ http://www.ros.org/about-ros
 ### Open terminal and paste this code ###
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
-### please read the note downbelow before use this line ###
+### Please read the note downbelow before use this line ###
 sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
 
-### update: 05/2019 they changed the key ###
-### remove the old key ###
+### Update: 05/2019 they changed the key ###
+### Remove the old key ###
 sudo apt-key del 421C365BD9FF1F717815A3895523BAEEB01FA116
 
-### add the new key ###
+### Add the new key ###
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 sudo apt update
@@ -66,7 +66,7 @@ echo $ROS_PACKAGE_PATH
 ### I'm gonna cut the process here because we only have 1 more application to install which is gabezo, ###
 ### but from now on we actually dont need it yet, jMAVSim is enough for chicken final term ._. ###
 		
-############### optional : Install jMAVSim ##############
+### optional : Install jMAVSim ###
 git clone https://github.com/PX4/jMAVSim.git
 
 sudo apt-get install ant openjdk-7-jdk openjdk-7-jre
@@ -78,13 +78,13 @@ git submodule update
 ant
 java -Djava.ext.dirs= -cp lib/*:out/production/jmavsim.jar me.drton.jmavsim.Simulator -serial /dev/ttyACM0 921600 -qgc
 
-####### Switch java version to run jMAVSim ##########
+### Switch java version to run jMAVSim ###
 sudo update-alternatives --config java
 
-### setup java home and path ###
+### Setup java home and path ###
 sudo su
 gedit .bashrc
-### edit in bashrc file when it pops up ###
+### Edit in bashrc file when it pops up ###
 JAVA_HOME = /usr/lib/jvm/java-8-openjdk-amd64/bin
 export JAVA_HOME
 PATH=$PATH:$JAVA_HOME
@@ -95,17 +95,16 @@ source ~/.bashrc
 echo $JAVA_HOME
 /usr/lib/jvm/default-java/bin
 java -version
-### U will see something like this ###
+### You will see something like this ###
 $ openjdk version "1.8.0_212"
 $ OpenJDK Runtime Environment (build 1.8.0_212-8u212-b03-0ubuntu1.18.04.1-b03)
 $ OpenJDK 64-Bit Server VM (build 25.212-b03, mixed mode)
  
-### Update: To Solve the problem while trying to run jMAVSim in ubuntu 18.04, 
-### we need to install java 8-171 oracle jdk. java openjdk cant run jMAVSim sadly ^^!
-### To install java 8 oracle jdk, we need to mannually install it because PPA is discontinued 
-### and oracle has changed the policy since April 2019 ###
+### Update: 
+To Solve the problem while trying to run jMAVSim in ubuntu 18.04, we need to install java 8-171 oracle jdk. java openjdk cant run jMAVSim sadly ^^! To install java 8 oracle jdk, we need to mannually install it because PPA is discontinued and oracle has changed the policy since April 2019.
 
-### Solved : Because of the above reason, we need to delete jMAVSim, install java oracle version 171 and then reinstall jMAVSim.
+### Solved : 
+Because of the above reason, we need to delete jMAVSim, install java oracle version 171 and then reinstall jMAVSim.
 ### Please carefully check the java environment before reinstall jMAVSim ###
 
 
