@@ -1,7 +1,8 @@
-# Project : Autonomous Landing Drone - Sejong University 2019 
+## Project : Autonomous Landing Drone - Sejong University 2019 
 License: iNCSL 
 
 Author : Viet
+
 Email: hoangvietdo@sju.ac.kr
 
 #### What is ROS/MAVROS ? ####
