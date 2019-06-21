@@ -10,10 +10,60 @@ http://www.ros.org/about-ros
 
 
 #### What is jMAVSim and Gazebo? Which one should we choose for simulation ? ####
+jMAVSim is a simple version of drone simulation. Its easy to install and run without any complicated step.
+However, jMAVSim has a limitation in application and modifying. jMAVsim only suitable for implementing
+control theory.
 
-...
+Gazebo, in another hand, is a powerful simation, it support every kind of application (ground,aerial,..).
+Likewise, Gazebo also support vision-based application (opencv, SLAM, AI,..). Eventhough, along with its pros, gazebo requires a lot of knowledge in programming to code and operate.
 
-#### How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  ####
+In this Project, we will use Gazebo because we are iNCSL members ~_~ We do love challenges!
+
+#### Requirements:
+1. ROS/MAVROS 
+2. Gazebo ( Project version : 9)
+3. Opencv 3+ ( Project version: 3.4.4 )
+4. Java 8+ ( Project version: 11 )
+
+#### 1. How to install Opencv in ubuntu 18.04 ####
+Please follow this instruction carefully:
+https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
+
+In case of the link above expired:
+
+Install OpenCV dependencies on Ubuntu 18.04:
+sudo apt-get update
+
+sudo apt-get upgrade
+
+sudo apt-get install build-essential cmake unzip pkg-config
+
+sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+
+sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+
+sudo apt-get install libxvidcore-dev libx264-dev
+
+sudo apt-get install libgtk-3-dev
+
+sudo apt-get install libatlas-base-dev gfortran
+
+Install Opencv:
+cd ~
+
+wget -O opencv.zip https://github.com/opencv/opencv/archive/3.4.4.zip
+
+wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/3.4.4.zip
+
+unzip opencv.zip
+
+unzip opencv_contrib.zip
+
+mv opencv-3.4.4 opencv
+
+mv opencv_contrib-3.4.4 opencv_contrib
+
+#### 2. How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  ####
 For more detail and explaination please visit:
 http://wiki.ros.org/melodic/Installation/Ubuntu 
 
@@ -70,7 +120,7 @@ echo $ROS_PACKAGE_PATH
 
 #### NOTE:
 I'm gonna cut the process here because we only have 1 more application to install which is gabezo, 
-but from now on we actually dont need it yet, jMAVSim is enough for chicken final term ._. 
+but from now on we actually dont need it yet.
 		
 #### Optional : Install jMAVSim ####
 git clone https://github.com/PX4/jMAVSim.git
@@ -124,7 +174,7 @@ Because of the above reason, we need to delete jMAVSim, install java oracle vers
 #### Please carefully check the java environment before reinstall jMAVSim ####
 
 
-#### Gazebo installation ####
+#### 3. Gazebo installation ####
 Please follow step by step in this website 
 http://gazebosim.org/tutorials?tut=install_ubuntu
 
@@ -154,7 +204,7 @@ sudo apt install -y \
 	libeigen3-dev \
 	genromfs
 
-sudo apt install ros-melodic-gazebo-ros-pkgs
+sudo apt install ros-melodic-gazebo-ros-pkgs ros-melodic-gazebo-ros-control
 
 #### PX4 firmware and initialize a PX4 object ####
 cd ~/catkin_ws/src
@@ -173,7 +223,6 @@ wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/
 
 install_geographiclib_datasets.sh
 
-#### Continue...
 
 
 
