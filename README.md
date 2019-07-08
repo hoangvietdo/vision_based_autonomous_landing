@@ -32,6 +32,7 @@ https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
 In case of the link above expired:
 
 Install OpenCV dependencies on Ubuntu 18.04:
+```
 sudo apt-get update
 
 sudo apt-get upgrade
@@ -47,22 +48,17 @@ sudo apt-get install libxvidcore-dev libx264-dev
 sudo apt-get install libgtk-3-dev
 
 sudo apt-get install libatlas-base-dev gfortran
-
+```
 Install Opencv:
+```
 cd ~
-
 wget -O opencv.zip https://github.com/opencv/opencv/archive/3.4.4.zip
-
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/3.4.4.zip
-
 unzip opencv.zip
-
 unzip opencv_contrib.zip
-
 mv opencv-3.4.4 opencv
-
 mv opencv_contrib-3.4.4 opencv_contrib
-
+```
 #### 2. How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  ####
 For more detail and explaination please visit:
 http://wiki.ros.org/melodic/Installation/Ubuntu 
