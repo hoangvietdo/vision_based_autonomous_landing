@@ -1,6 +1,6 @@
 ## Intelligent Navigation and Control Systems Laboratory ##
 
-###### How to install ROS/MAVROS/GAZEBO in Ubuntu 18.04
+##### How to install ROS/MAVROS/GAZEBO in Ubuntu 18.04
 
 License: [iNCSL](https://sites.google.com/view/incsl)
 
@@ -8,10 +8,10 @@ Author : Viet
 
 Email: hoangvietdo@sju.ac.kr
 
-###### What is ROS/MAVROS ? 
+#### What is ROS/MAVROS ? 
 [ROS/MAVOS](http://www.ros.org/about-ros)
 
-###### What is jMAVSim and Gazebo? Which one should we choose for simulation ? 
+#### What is jMAVSim and Gazebo? Which one should we choose for simulation ? 
 jMAVSim is a simple version of drone simulation. It's easy to install and run without any complicated step.
 However, jMAVSim has a limitation in application and modifying. jMAVsim only suitable for implementing
 control theory.
@@ -22,19 +22,19 @@ Likewise, Gazebo also support vision-based application (opencv, SLAM, AI,..). Ev
 
 In this Project, we will use Gazebo because we are iNCSL members ~_~ We do love challenges!
 
-###### Requirements:
+#### Requirements:
 1. ROS
 2. MAVROS 
 3. Gazebo ( Project version : 9)
 4. Opencv 3+ ( Project version: 3.2.0 )
 5. Java 8+ ( Project version: 11 )
 
-###### Note:
+#### Note:
 - Please carefully read and follow this instruction.
 
 - jMAVSim installation section is not important, if you have to use jMAVSim you can refer to this instruction. Because we will not use jMAVSim as I explained above section, you dont need to install jMAVSim
 
-###### 1. How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  
+#### 1. How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  
 - Reference: [Ubuntu18.04](http://wiki.ros.org/melodic/Installation/Ubuntu)
 
 - Open terminal and paste this code:
@@ -58,7 +58,7 @@ pkg-config --modversion opencv
 
 Still Working on it ...
 
-###### 2.Install MAVROS 
+#### 2.Install MAVROS 
 - Reference : [MAVROS](https://dev.px4.io/en/ros/mavros_installation.html)
 ```
 sudo apt-get install ros-melodic-mavros ros-melodic-mavros-extras
@@ -91,7 +91,7 @@ echo $ROS_PACKAGE_PATH
 ```
 /home/viet/catkin_ws/src:/opt/ros/melodic/share "
 ```
-###### 3. Gazebo installation 
+#### 3. Gazebo installation 
 - Reference: [GAZEBO Installation](http://gazebosim.org/tutorials?tut=install_ubuntu)
 
 - To use all provided utilities,  there are some packages we need to install 
@@ -144,7 +144,7 @@ to   : url: https://api.ignitionrobotics.org
 - Press Ctrl + O, Enter, Ctrl X and then run gazebo again. Error should be fixed.
 
 
-###### 4. Install PX4 Library - Software in the loop simulation (SITL) 
+#### 4. Install PX4 Library - Software in the loop simulation (SITL) 
 ```
 cd ~/catkin_ws/src
 git clone https://github.com/PX4/Firmware.git
@@ -168,7 +168,7 @@ export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware/Tools/sitl_ga
 source ~/.bashrc
 sudo apt-get install ant protobuf-compiler libeigen3-dev libopencv-dev clang-3.9 lldb-3.9 -y
 ```
-###### 5. How to install Opencv in ubuntu 18.04 and make it usable to ROS 
+#### 5. How to install Opencv in ubuntu 18.04 and make it usable to ROS 
 - Reference: [Opencv](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/)
 
 - Install OpenCV dependencies on Ubuntu 18.04:
@@ -183,7 +183,7 @@ sudo add-apt-repository 'deb http://security.ubuntu.com/ubuntu xenial-security m
 sudo apt update
 sudo apt install libjasper1 libjasper-dev
 ```
-###### Optional : Install jMAVSim 
+#### Optional : Install jMAVSim 
 ```
 git clone https://github.com/PX4/jMAVSim.git
 ```
@@ -228,7 +228,7 @@ Because of the above reason, we need to delete jMAVSim, install java oracle vers
 Please carefully check the java environment before reinstall jMAVSim.
 
 
-###### How to start with your Project ! 
+#### How to start with your Project ! 
 - Reference : [ROS](http://wiki.ros.org/ROS/Tutorials/CreatingPackage)
 - Above, we created a ~/catkin_ws/ folder which can be use as a project folder but we also can create another one for specific purposes:
 ```
