@@ -280,18 +280,58 @@ roslaunch ar2landing_gazebo landing_platform.launch
 rosrun ar2landing_neural autonomous_landingNeural.py
 rosrun ar2landing_neural autonomous_search.py
 rosrun rqt_image_view rqt_image_view
+
+- Please skip this part:
+```
 export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/home/viet/Documents/GAAS/simulator/models
 cp -r /home/viet/Documents/GAAS/simulator/launch/* ~/catkin_ws/src/Firmware/launch/
 cp -r /home/viet/Documents/GAAS/simulator/models/* ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/models/
-cp -r /home/viet/Documentermts/GAAS/simulator/worlds/* ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/worlds/
+cp -r /home/viet/Documents/GAAS/simulator/worlds/* ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/worlds/
 cp -r /home/viet/Documents/GAAS/simulator/posix-config/* ~/catkin_ws/src/Firmware/posix-configs/SITL/init/ekf2/
-sudo pip install pyquaternion
-cd /home/viet/Documents/GAAS/demo/tutorial_1/1_px4_mavros_offboard_controller
-python px4_mavros_run.py
+cp -r /home/viet/Documents/GAAS/simulator/urdf ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/
 ```
 
+cd /home/viet/Documents/GAAS/demo/tutorial_1/1_px4_mavros_offboard_controller
+python px4_mavros_run.py
+rostopic echo /mavros/altitude
+```
+```
+./run_gazebo.sh
+sudo killall rosmaster
+sudo killall gzserver
+sudo killall gzclient
+```
+```
+sudo pip install pyquaternion
+sudo apt-get install ipython
+```
+```
+cp -r ~.../launch/* ~/catkin_ws/src/Firmware/launch/
+cp -r ~.../models/* ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/models/
+cp -r ~.../posix-config/* ~/catkin_ws/src/Firmware/posix-configs/SITL/init/ekf2/
+cp -r ~.../worlds/* ~/catkin_ws/src/Firmware/Tools/sitl_gazebo/worlds/
 
+```
 
+- To run the simulation:
+
+```
+roslaunch px4 landing.launch
+```
+- Open another 2 terminal and cd to the Folder that contain the python code:
+```
+cd ...
+python px4_mavros_run
+ipython
+from commander import Commander
+c = Commander()
+c.move(1,1,1)
+```
+
+- To Trigger Camera:
+```
+rosrun rqt_image_view rqt_image_view
+```
 
 
 
