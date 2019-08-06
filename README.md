@@ -150,6 +150,7 @@ cd ~/catkin_ws/src
 git clone https://github.com/PX4/Firmware.git
 cd Firmware
 git submodule update --init --recursive
+git checkout v1.8.2
 sudo apt-get install python-jinja2 -y
 make px4_sitl_default gazebo
 cd ~/catkin_ws
@@ -158,7 +159,6 @@ catkin build
 - Opend ~/.bashrc and add these lines at the end of the script:
 ```
 sudo nano ~/.bashrc
-
 source ~/catkin_ws/src/Firmware/Tools/setup_gazebo.bash ~/catkin_ws/Firmware/ ~/catkin_ws/src/Firmware/build/posix_sitl_default
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware/Tools/sitl_gazebo
