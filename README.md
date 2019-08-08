@@ -152,7 +152,8 @@ cd Firmware
 git submodule update --init --recursive
 git checkout v1.8.2
 sudo apt-get install python-jinja2 -y
-make px4_sitl_default gazebo
+1. make posix_sitl_default gazebo
+2. make px4_sitl_default gazebo
 cd ~/catkin_ws
 catkin build
 ```
@@ -162,7 +163,7 @@ sudo nano ~/.bashrc
 source ~/catkin_ws/src/Firmware/Tools/setup_gazebo.bash ~/catkin_ws/Firmware/ ~/catkin_ws/src/Firmware/build/posix_sitl_default
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware/Tools/sitl_gazebo
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:~/catkin_ws/src/Firmware/build/px4_sitl_default/build_gaz$
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:~/catkin_ws/src/Firmware/build/px4_sitl_default/build_gazebo
 export GAZEBO_PLUGIN_PATH=~/src/Firmware/build/px4_sitl_default/build_gazebo
 export GAZEBO_MODEL_PATH=~/src/Firmware/Tools/sitl_gazebo/models
 
