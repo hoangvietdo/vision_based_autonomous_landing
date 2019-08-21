@@ -177,7 +177,6 @@ class Px4Controller:
     def imu_callback(self, msg):
         global global_imu, current_heading
         self.imu = msg
-	#print (msg)
 
         self.current_heading = self.q2yaw(self.imu.orientation)
 
@@ -185,7 +184,6 @@ class Px4Controller:
 
     def gps_callback(self, msg):
         self.gps = msg
-	#print ("GPS : ",msg)
 
     def body2enu(self, body_target_x, body_target_y, body_target_z):
 
@@ -225,10 +223,8 @@ class Px4Controller:
 
             FLU_x, FLU_y, FLU_z = self.BodyOffsetENU2FLU(msg)
 
-            #self.Pos_target_x = FLU_x + self.local_pose.pose.position.x
-            #self.Pos_target_y = FLU_y + self.local_pose.pose.position.y
-            self.Pos_target_x = msg.pose.position.x + self.local_pose.pose.position.x
-            self.Pos_target_y = msg.pose.position.y + self.local_pose.pose.position.y
+            self.Pos_target_x = FLU_x + self.local_pose.pose.position.x
+            self.Pos_target_y = FLU_y + self.local_pose.pose.position.y
             self.Pos_target_z = FLU_z + self.gps.altitude
         else:
             print "NO"
@@ -282,7 +278,6 @@ class Px4Controller:
 
         #print "P_err", self.Pos_err_x, self.Pos_err_y
         #print "Atti", self.Ati_target_x, self.Ati_target_y
-        #print self.Pos_target_x, self.local_pose.pose.position.x, self.Ati_target_y
         #print self.alti_err, self.thrust
 
         if self.thrust>1:
