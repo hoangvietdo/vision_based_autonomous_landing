@@ -251,7 +251,7 @@ class Px4Controller:
 
             self.Pos_target_x = FLU_x + self.local_pose.pose.position.x
             self.Pos_target_y = FLU_y + self.local_pose.pose.position.y
-            self.Pos_target_z = FLU_z + self.gps.altitude
+            self.Pos_target_z = FLU_z + self.local_pose.pose.position.z
         else:
             '''
             LOCAL_ENU
@@ -316,7 +316,6 @@ class Px4Controller:
 
         #print "P_err", self.Pos_err_x, self.Pos_err_y
         #print self.Pos_target_x, self.local_pose.pose.position.x
-        #print "Atti", self.Ati_target_x, self.Ati_target_y
         #print self.alti_err, self.thrust
 
         if self.thrust>1:
