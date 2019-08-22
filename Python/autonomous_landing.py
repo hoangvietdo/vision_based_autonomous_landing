@@ -225,7 +225,7 @@ class Px4Controller:
 
             self.Pos_target_x = FLU_x + self.local_pose.pose.position.x
             self.Pos_target_y = FLU_y + self.local_pose.pose.position.y
-            self.Pos_target_z = FLU_z + self.gps.altitude
+            self.Pos_target_z = FLU_z + self.local_pose.pose.position.z
         else:
             print "NO"
             
