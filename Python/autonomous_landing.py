@@ -2,14 +2,13 @@ import rospy
 from mavros_msgs.msg import GlobalPositionTarget, State, PositionTarget, AttitudeTarget
 from mavros_msgs.srv import CommandBool, CommandTOL, SetMode
 from geometry_msgs.msg import PoseStamped, Twist, Vector3Stamped
-from sensor_msgs.msg import Imu, NavSatFix, Image
-from std_msgs.msg import Float32, Float64, String
+from sensor_msgs.msg import Imu, NavSatFix
+from std_msgs.msg import Float32, Float64, String,Float32MultiArray
 import time
 from pyquaternion import Quaternion
 import math
 import threading
-from cv_bridge import CvBridge, CvBridgeError
-import cv2
+
 
 
 class Px4Controller:
@@ -36,7 +35,7 @@ class Px4Controller:
 
         self.Pos_target_x=0
         self.Pos_target_y=0
-        self.Pos_target_z=540
+        self.Pos_target_z=6
 
         self.Ati_target_x=0
         self.Ati_target_y=0
@@ -63,13 +62,16 @@ class Px4Controller:
         self.state = None
 
         self.sta=0
+        self.cn=0
         self.dt=0
 
-        self.p_Kp = 1
+        self.p_Kp = 0.6
         self.p_Ki = 0.000001
-        self.p_Kd = 2
+        self.p_Kd = 3
 
-        self.bridge = CvBridge()
+        self.detect=0
+
+        self. pub_flag=True
 
         '''
         ros subscribers
@@ -81,9 +83,7 @@ class Px4Controller:
 
         self.set_target_position_sub = rospy.Subscriber("gi/set_pose/position", PoseStamped, self.set_target_position_callback)
         self.set_target_yaw_sub = rospy.Subscriber("gi/set_pose/orientation", Float32, self.set_target_yaw_callback)
-        self.custom_activity_sub = rospy.Subscriber("gi/set_activity/type", String, self.custom_activity_callback)
-
-        self.camera_image=rospy.Subscriber("/gi/simulation/left/image_raw", Image, self.image_callback)
+        self.camera_deection_pub_sub = rospy.Subscriber("camera/detection", Float32MultiArray, self.detection_callback)
 
         '''
         ros publishers
@@ -102,7 +102,7 @@ class Px4Controller:
         rospy.init_node("offboard_node")
 	self.alti_err_int = 0
         self.cur_target_ati = self.construct_target_ati(0, 0, 0,self.thrust)
-        print ("self.cur_target_ati:", self.cur_target_ati, type(self.cur_target_ati))
+        #print ("self.cur_target_ati:", self.cur_target_ati, type(self.cur_target_ati))
 
         for i in range(10):
             self.attitude_target_pub.publish(self.cur_target_ati)
@@ -110,27 +110,29 @@ class Px4Controller:
             self.arm_state = self.arm()
             self.offboard_state = self.offboard()
             time.sleep(0.2)
-            
-        #if self.takeoff_detection():
-        #    print("Vehicle Took Off!")
-
-        #else:
-        #    print("Vehicle Took Off Failed!")
-        #    return
 
         '''
         main ROS thread
         '''
 
         while self.arm_state and self.offboard_state and (rospy.is_shutdown() is False):
-            self.attitude_target_pub.publish(self.cur_target_ati)
-
-            #if (self.state is "LAND") and (self.local_pose.pose.position.z < 0.15):
-
-            #    if(self.disarm()):
-
-            #        self.state = "DISARMED"
-
+            
+            if self.detect is 0:
+                #searching
+                self.Pos_target_x = self.Pos_target_x +2
+                time.sleep(1)
+                self.Pos_target_y=self.Pos_target_y-6
+                time.sleep(10)
+                self.Pos_target_x = self.Pos_target_x +2
+                time.sleep(1)
+                self.Pos_target_y=self.Pos_target_y+6
+                time.sleep(10)
+            
+                
+            if self.local_pose.pose.position.z<1.7:
+                self.local_pose.pose.position.z=0.1
+            if self.local_pose.pose.position.z<1:
+                self.state = "DISARMED"
 
             time.sleep(0.1)
 
@@ -148,10 +150,7 @@ class Px4Controller:
 
         return target_raw_atti
 
-    '''
-    cur_p : poseStamped
-    target_p: positionTarget
-    '''
+
     def position_distance(self, cur_p, target_p, threshold=0.1):
         delta_x = math.fabs(cur_p.pose.position.x - target_p.position.x)
         delta_y = math.fabs(cur_p.pose.position.y - target_p.position.y)
@@ -176,7 +175,6 @@ class Px4Controller:
     def imu_callback(self, msg):
         global global_imu, current_heading
         self.imu = msg
-
         self.current_heading = self.q2yaw(self.imu.orientation)
 
         self.received_imu = True
@@ -218,7 +216,6 @@ class Px4Controller:
 
             self.frame = "BODY"
 
-            print("body FLU frame")
 
             FLU_x, FLU_y, FLU_z = self.BodyOffsetENU2FLU(msg)
 
@@ -226,8 +223,19 @@ class Px4Controller:
             self.Pos_target_y = FLU_y + self.local_pose.pose.position.y
             self.Pos_target_z = FLU_z + self.local_pose.pose.position.z
         else:
-            print "NO"
-            
+            '''
+            LOCAL_ENU
+            '''
+            # For world frame, we will use ENU (EAST, NORTH and UP)
+            #     +Z     +Y
+            #      ^    ^
+            #      |  /
+            #      |/
+            #    world------> +X
+
+            self.frame = "LOCAL_ENU"
+
+            self.Pos_target_x,self.Pos_target_y,self.Pos_target_z = self.body2enu(msg.pose.position.x, msg.pose.position.y, msg.pose.position.z)
 
 
     def position_PID(self):
@@ -241,28 +249,26 @@ class Px4Controller:
         self.Pos_err_int_y = self.Pos_err_int_y + self.Pos_err_y * self.dt
 
 
-
         cal_ati_x  = (self.p_Kp * self.Pos_err_x) + (self.p_Ki * self.Pos_err_int_x) + (self.p_Kd * (self.Pos_err_x - self.pr_Pos_err_x) / self.dt)
         cal_ati_y  = (self.p_Kp * self.Pos_err_y) + (self.p_Ki * self.Pos_err_int_y) + (self.p_Kd * (self.Pos_err_y - self.pr_Pos_err_y) / self.dt)
 
         self.Ati_target_x=-cal_ati_y
-        self.Ati_target_y=cal_ati_x
-            
-
-        if ((self.Ati_target_x > 15) or (self.Ati_target_x < -15)):
+        self.Ati_target_y=cal_ati_x         
+    
+        if ((self.Ati_target_x > 40) or (self.Ati_target_x < -40)):
         
-            self.Ati_target_x = 15 * (self.Ati_target_x / abs(self.Ati_target_x))
+            self.Ati_target_x = 40 * (self.Ati_target_x / abs(self.Ati_target_x))
         
 
-        if ((self.Ati_target_y > 15) or (self.Ati_target_y < -15)):
+        if ((self.Ati_target_y > 40) or (self.Ati_target_y < -40)):
         
-            self.Ati_target_y = 15 * (self.Ati_target_y / abs(self.Ati_target_y ))
-
-
+            self.Ati_target_y = 40 * (self.Ati_target_y / abs(self.Ati_target_y ))
 
     def alti_con(self):
-
-        self.dt = self.get_dt()
+        try:
+            self.dt = self.get_dt()
+        except:
+            self.dt=0
         if self.dt<0.0001:
             return
 
@@ -275,8 +281,11 @@ class Px4Controller:
         self.thrust = 0.56 + (self.al_Kp * self.alti_err) + (self.al_Ki * self.alti_err_int) + (self.al_Kd * (self.alti_err - self.pre_alti_err) / self.dt)
 
         #print "P_err", self.Pos_err_x, self.Pos_err_y
+        #print "Targ", self.Pos_target_x, self.Pos_target_y
         #print "Atti", self.Ati_target_x, self.Ati_target_y
         #print self.alti_err, self.thrust
+
+        #print self.local_pose.pose.position.x, self.local_pose.pose.position.y, self.local_pose.pose.position.z
 
         if self.thrust>1:
             self.thrust=0.999
@@ -286,50 +295,24 @@ class Px4Controller:
                                                          0,
                                                          self.thrust)
 
+        self.attitude_target_pub.publish(self.cur_target_ati)
+
     def get_dt(self):
         dt=rospy.get_time () -self.sta
         self.sta=rospy.get_time ()
         return dt
 
+    def detection_callback(self,msg):
+        self.detect=1
+        x,y,z=msg.data
+        self.Pos_target_x = self.local_pose.pose.position.x-y
+        self.Pos_target_y = self.local_pose.pose.position.y-x
+        if x <= 0.35 and y<=0.35 and x >= -0.35 and y>=-0.35:
+            self.Pos_target_z = self.local_pose.pose.position.z-0.8
 
-    def image_callback(self,msg):
-
-        #print("Received an image!")
-        cv2_img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-        cv2.imshow('image', cv2_img)
-
-        cv2.waitKey(3)
-
-
-    '''
-    Receive A Custom Activity
-    '''
-    
-    def custom_activity_callback(self, msg):
-
-        print("Received Custom Activity:", msg.data)
-
-        if msg.data == "LAND":
-            print("LANDING!")
-            self.state = "LAND"
-            self.cur_target_pose = self.construct_target(0.1,
-                                                         self.current_heading)
-
-        if msg.data == "HOVER":
-            print("HOVERING!")
-            self.state = "HOVER"
-            self.hover()
-
-        if msg.data == "HOME":
-            print("HOME")
-            #self.state="HOME"
-            self.Pos_target_x=self.home_x
-            self.Pos_target_y=self.home_y
-
-
-        else:
-            print("Received Custom Activity:", msg.data, "not supported yet!")
-
+        print "Pos", self.local_pose.pose.position.x, self.local_pose.pose.position.y
+        print "Ter", self.Pos_target_x, self.Pos_target_y
+        print "Err", x,y
 
     def set_target_yaw_callback(self, msg):
         print("Received New Yaw Task!")
@@ -358,31 +341,12 @@ class Px4Controller:
             print("Vehicle arming failed!")
             return False
 
-    def disarm(self):
-        if self.armService(False):
-            return True
-        else:
-            print("Vehicle disarming failed!")
-            return False
-
 
     def offboard(self):
         if self.flightModeService(custom_mode='OFFBOARD'):
             return True
         else:
             print("Vechile Offboard failed")
-            return False
-
-
-    def hover(self):
-
-        self.cur_target_pose = self.construct_target(self.local_pose.pose.position.z,
-                                                     self.current_heading)
-
-    def takeoff_detection(self):
-        if self.local_pose.pose.position.z > 0.1 and self.offboard_state and self.arm_state:
-            return True
-        else:
             return False
 
 

@@ -66,7 +66,6 @@ class Px4Controller:
         self.state = None
 
         self.sta=0
-        self.cn=0
         self.dt=0
 
         self.p_Kp = 1
@@ -300,11 +299,10 @@ class Px4Controller:
 
 
     def alti_con(self):
-        if self.cn<3:
-            self.cn=self.cn+1
-            return
 
         self.dt = self.get_dt()
+        if self.dt<0.0001:
+            return
 
         self.position_PID()
 
