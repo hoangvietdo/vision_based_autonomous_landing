@@ -4,9 +4,9 @@
 
 License: [iNCSL](https://sites.google.com/view/incsl)
 
-Author : Viet
+Author : Viet, San Hee Kang
 
-Email: hoangvietdo@sju.ac.kr
+Email: hoangvietdo@sju.ac.kr , rkdovo08@naver.com
 
 #### What is ROS/MAVROS ? 
 [ROS/MAVOS](http://www.ros.org/about-ros)
@@ -152,8 +152,8 @@ cd Firmware
 git submodule update --init --recursive
 git checkout v1.8.2
 sudo apt-get install python-jinja2 -y
-1. make posix_sitl_default gazebo
-2. make px4_sitl_default gazebo
+make posix_sitl_default gazebo
+(optional) make px4_sitl_default gazebo
 cd ~/catkin_ws
 catkin build
 ```
