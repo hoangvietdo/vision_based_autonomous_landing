@@ -12,7 +12,7 @@ python autonomous_landing_camera.py
 
 
 
-Drone moves in the form of a sine wave untile a marker is detected.
+Drone moves in the form of a sine wave until a marker is detected.
 ![Test](https://user-images.githubusercontent.com/46476876/64112409-48c91d00-cdc2-11e9-9366-cdbef56d4379.gif)
 
 
