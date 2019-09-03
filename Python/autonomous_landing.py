@@ -73,6 +73,9 @@ class Px4Controller:
 
         self. pub_flag=True
 
+        self.camera_x=0
+        self.camera_y=0
+
         '''
         ros subscribers
         '''
@@ -114,24 +117,20 @@ class Px4Controller:
         '''
         main ROS thread
         '''
+        minus=1
 
         while self.arm_state and self.offboard_state and (rospy.is_shutdown() is False):
             
             if self.detect is 0:
+                minus=minus*-1
                 #searching
                 self.Pos_target_x = self.Pos_target_x +2
                 time.sleep(1)
-                self.Pos_target_y=self.Pos_target_y-6
-                time.sleep(10)
-                self.Pos_target_x = self.Pos_target_x +2
-                time.sleep(1)
-                self.Pos_target_y=self.Pos_target_y+6
+                self.Pos_target_y=self.Pos_target_y+6*minus
                 time.sleep(10)
             
-                
-            if self.local_pose.pose.position.z<1.7:
-                self.local_pose.pose.position.z=0.1
-            if self.local_pose.pose.position.z<1:
+            if (self.state is "LAND") and (self.local_pose.pose.position.z<1.7):
+                self.Pos_target_z=0.1
                 self.state = "DISARMED"
 
             time.sleep(0.1)
@@ -242,11 +241,11 @@ class Px4Controller:
         
         self.pr_Pos_err_x = self.Pos_err_x
         self.Pos_err_x = self.Pos_target_x - self.local_pose.pose.position.x
-        self.Pos_err_int_x = self.Pos_err_int_x + self.Pos_err_x * self.dt
+        self.Pos_err_int_x = self.Pos_err_int_x +( self.pr_Pos_err_x+ self.Pos_err_x) * self.dt/2
 
         self.pr_Pos_err_y = self.Pos_err_y
         self.Pos_err_y = self.Pos_target_y - self.local_pose.pose.position.y
-        self.Pos_err_int_y = self.Pos_err_int_y + self.Pos_err_y * self.dt
+        self.Pos_err_int_y = self.Pos_err_int_y + (self.Pos_err_y +  self.pr_Pos_err_y) * self.dt /2
 
 
         cal_ati_x  = (self.p_Kp * self.Pos_err_x) + (self.p_Ki * self.Pos_err_int_x) + (self.p_Kd * (self.Pos_err_x - self.pr_Pos_err_x) / self.dt)
@@ -276,7 +275,7 @@ class Px4Controller:
 
         self.pre_alti_err=self.alti_err
         self.alti_err=self.Pos_target_z-self.local_pose.pose.position.z
-        self.alti_err_int =self.alti_err_int+ self.alti_err * self.dt
+        self.alti_err_int =self.alti_err_int+ (self.pre_alti_err+self.alti_err) * self.dt/2
 
         self.thrust = 0.56 + (self.al_Kp * self.alti_err) + (self.al_Ki * self.alti_err_int) + (self.al_Kd * (self.alti_err - self.pre_alti_err) / self.dt)
 
@@ -284,6 +283,7 @@ class Px4Controller:
         #print "Targ", self.Pos_target_x, self.Pos_target_y
         #print "Atti", self.Ati_target_x, self.Ati_target_y
         #print self.alti_err, self.thrust
+        print self.Pos_err_int_x, self.Pos_err_int_y, self.alti_err_int, self.Pos_target_z
 
         #print self.local_pose.pose.position.x, self.local_pose.pose.position.y, self.local_pose.pose.position.z
 
@@ -305,14 +305,19 @@ class Px4Controller:
     def detection_callback(self,msg):
         self.detect=1
         x,y,z=msg.data
+
+        self.camera_x=x
+        self.camera_y=y
+
         self.Pos_target_x = self.local_pose.pose.position.x-y
         self.Pos_target_y = self.local_pose.pose.position.y-x
-        if x <= 0.35 and y<=0.35 and x >= -0.35 and y>=-0.35:
-            self.Pos_target_z = self.local_pose.pose.position.z-0.8
+        if x <= 1 and y<=1 and x >= -1 and y>=-1:
+            self.Pos_target_z = self.local_pose.pose.position.z-0.4
+            self.state = "LAND"
 
-        print "Pos", self.local_pose.pose.position.x, self.local_pose.pose.position.y
-        print "Ter", self.Pos_target_x, self.Pos_target_y
-        print "Err", x,y
+        #print "Pos", self.local_pose.pose.position.x, self.local_pose.pose.position.y
+        #print "Ter", self.Pos_target_x, self.Pos_target_y
+        #print "Err", x,y
 
     def set_target_yaw_callback(self, msg):
         print("Received New Yaw Task!")
@@ -354,4 +359,5 @@ if __name__ == '__main__':
 
     con = Px4Controller()
     con.start()
+
 
