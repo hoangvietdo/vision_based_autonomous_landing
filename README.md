@@ -1,6 +1,6 @@
 ## Intelligent Navigation and Control Systems Laboratory ##
 
-##### How to install ROS/MAVROS/GAZEBO in Ubuntu 18.04
+##### How to install ROS/MAVROS/GAZEBO in Ubuntu 18.04/16.04
 
 License: [iNCSL](https://sites.google.com/view/incsl)
 
@@ -36,7 +36,12 @@ In this Project, we will use Gazebo because we are iNCSL members ~_~ We do love 
 
 #### 1. How to install ROS in ubuntu 18.xx ~~~ ROS Melodic  
 - Reference: [Ubuntu18.04](http://wiki.ros.org/melodic/Installation/Ubuntu)
-
+- Check for update/upgrade:
+```
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get autoremove
+```
 - Open terminal and paste this code:
 ```
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -52,7 +57,6 @@ sudo apt install python-rosinstall python-rosinstall-generator python-wstool bui
 - Check if environment is properly setup:
 ```
 printenv | grep ROS
-pkg-config --modversion opencv
 ```
 - Install and config cv_brigde for ROS and OpenCV
 
@@ -77,6 +81,7 @@ cd ~/catkin_ws/src
 catkin_init_workspace
 rosinstall_generator --rosdistro melodic mavlink | tee /tmp/mavros.rosinstall
 rosinstall_generator --upstream mavros | tee -a /tmp/mavros.rosinstall
+cd ..
 wstool merge -t src /tmp/mavros.rosinstall
 wstool update -t src -j4
 rosdep install --from-paths src --ignore-src -y
@@ -89,7 +94,7 @@ echo $ROS_PACKAGE_PATH
 ```
 - Output will be like this:
 ```
-/home/viet/catkin_ws/src:/opt/ros/melodic/share "
+/opt/ros/melodic/share
 ```
 #### 3. Gazebo installation 
 - Reference: [GAZEBO Installation](http://gazebosim.org/tutorials?tut=install_ubuntu)
@@ -97,15 +102,8 @@ echo $ROS_PACKAGE_PATH
 - To use all provided utilities,  there are some packages we need to install 
 first:
 ```
-pip install -y\
-	pandas \
-	jinja2 \
-	pyserial \
-	cerberus \
-	pyulog \
-	numpy \
-	toml \
-	pyquaternion
+sudo apt install python-pip
+pip install pandas jinja2 pyserial cerberus pyulog numpy toml pyquaternion
 sudo apt install -y \
 	ninja-build \
 	exiftool \
@@ -120,6 +118,10 @@ sudo apt install -y \
 	protobuf-compiler \
 	libeigen3-dev \
 	genromfs
+```
+- If there is any error with "pip install -y " , please try this:
+```
+pip --user install
 ```
 - Check installation:
 ```
@@ -171,7 +173,6 @@ export GAZEBO_MODEL_PATH=~/catkin_ws/src/Firmware/Tools/sitl_gazebo/models
 - Press Ctrl+O, Enter, Ctrl+X
 ```
 source ~/.bashrc
-sudo apt-get install ant protobuf-compiler libeigen3-dev libopencv-dev clang-3.9 lldb-3.9 -y
 ```
 #### 5. How to install Opencv in ubuntu 18.04 and make it usable to ROS 
 - Reference: [Opencv](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/)
@@ -180,6 +181,7 @@ sudo apt-get install ant protobuf-compiler libeigen3-dev libopencv-dev clang-3.9
 ```
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get install ant protobuf-compiler libeigen3-dev libopencv-dev clang-3.9 lldb-3.9 -y
 sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev -y
 sudo apt-get install libxvidcore-dev libx264-dev
 sudo apt-get install libgtk-3-dev -y
