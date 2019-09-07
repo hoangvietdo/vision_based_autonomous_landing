@@ -4,7 +4,7 @@
 
 License: [iNCSL](https://sites.google.com/view/incsl)
 
-Author : Viet, San Hee Kang
+Author : Viet , San Hee Kang
 
 Email: hoangvietdo@sju.ac.kr , rkdovo08@naver.com
 
@@ -20,7 +20,7 @@ Gazebo, in another hand, is a powerful simation, it support every kind of applic
 Likewise, Gazebo also support vision-based application (opencv, SLAM, AI,..). Eventhough, along with its pros, gazebo requires a lot of knowledge in programming to code and operate.
 [GAZEBO](http://gazebosim.org/)
 
-In this Project, we will use Gazebo because we are iNCSL members ~_~ We do love challenges!
+In this Project, we will use Gazebo because we are iNCSL members -_- We do love challenges!
 
 #### Requirements:
 1. ROS
@@ -28,6 +28,7 @@ In this Project, we will use Gazebo because we are iNCSL members ~_~ We do love 
 3. Gazebo ( Project version : 9)
 4. Opencv 3+ ( Project version: 3.2.0 )
 5. Java 8+ ( Project version: 11 )
+6. PX4 Firmware v1.8.2
 
 #### Note:
 - Please carefully read and follow this instruction.
@@ -52,7 +53,7 @@ sudo rosdep init
 rosdep update
 echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
-sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo apt install python-rosinstall python-rosinstall-generator python-wstool build-essential -y
 ```
 - Check if environment is properly setup:
 ```
@@ -69,7 +70,7 @@ sudo apt-get install ros-melodic-mavros ros-melodic-mavros-extras
 wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
 sudo chmod +x ./install_geographiclib_datasets.sh
 sudo ./install_geographiclib_datasets.sh
-sudo apt-get install python-catkin-tools python-rosinstall-generator -y
+sudo apt-get install python-catkin-tools -y
 ```
 - Create workspace 
 ```
@@ -104,6 +105,13 @@ first:
 ```
 sudo apt install python-pip
 pip install pandas jinja2 pyserial cerberus pyulog numpy toml pyquaternion
+```
+- If there is any error, please substitute "pip -install -y" with:
+```
+pip --user install
+```
+- And:
+```
 sudo apt install -y \
 	ninja-build \
 	exiftool \
@@ -118,10 +126,6 @@ sudo apt install -y \
 	protobuf-compiler \
 	libeigen3-dev \
 	genromfs
-```
-- If there is any error with "pip install -y " , please try this:
-```
-pip --user install
 ```
 - Check installation:
 ```
@@ -155,14 +159,13 @@ git submodule update --init --recursive
 git checkout v1.8.2
 sudo apt-get install python-jinja2 -y
 make posix_sitl_default gazebo
-(optional) make px4_sitl_default gazebo
 cd ~/catkin_ws
 catkin build
 ```
 - Opend ~/.bashrc and add these lines at the end of the script:
 ```
 sudo nano ~/.bashrc
-source ~/catkin_ws/src/Firmware/Tools/setup_gazebo.bash ~/catkin_ws/Firmware/ ~/catkin_ws/src/Firmware/build/posix_sitl_default
+source ~/catkin_ws/src/Firmware/Tools/setup_gazebo.bash ~/catkin_ws/Firmware ~/catkin_ws/src/Firmware/build/posix_sitl_default
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware/Tools/sitl_gazebo
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:~/catkin_ws/src/Firmware/build/px4_sitl_default/build_gazebo
@@ -190,7 +193,7 @@ sudo add-apt-repository 'deb http://security.ubuntu.com/ubuntu xenial-security m
 sudo apt update
 sudo apt install libjasper1 libjasper-dev
 ```
-#### Optional : Install jMAVSim 
+#### ( Optional ) : Install and use jMAVSim as simulation 
 ```
 git clone https://github.com/PX4/jMAVSim.git
 ```
@@ -297,7 +300,7 @@ python px4_mavros_run.py
 ipython
 from commander import Commander
 c = Commander()
-c.move(1,1,1)
+c.move(1,2,3)
 ```
 - To Trigger Camera:
 ```
