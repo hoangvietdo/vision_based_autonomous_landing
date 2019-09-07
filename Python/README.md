@@ -1,3 +1,4 @@
+#### Running simulation
 After run launch file,
 
 ```
@@ -9,8 +10,17 @@ python autonomous_landing.py
 python autonomous_landing_camera.py
 
 ```
+#### Integration algorithm comparison
+- blue : Rectangular integration  
+- red : Trapezoidal integration  
+(rostime : 270s - take-off / 350s - landing ) 
 
 
+
+
+
+
+#### Simulation
 
 Drone moves in the form of a sine wave until a marker is detected.
 ![Test](https://user-images.githubusercontent.com/46476876/64112409-48c91d00-cdc2-11e9-9366-cdbef56d4379.gif)
