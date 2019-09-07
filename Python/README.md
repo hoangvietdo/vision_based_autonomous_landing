@@ -11,9 +11,14 @@ python autonomous_landing_camera.py
 
 ```
 #### Integration algorithm comparison
+![Screenshot from 2019-09-06 14-16-33](https://user-images.githubusercontent.com/46476876/64478891-52032100-d1ea-11e9-99a4-85085ea9aff6.png)
+
+(rostime : 270s - take-off / 350s - landing ) 
 - blue : Rectangular integration  
 - red : Trapezoidal integration  
-(rostime : 270s - take-off / 350s - landing ) 
+
+
+
 
 
 
