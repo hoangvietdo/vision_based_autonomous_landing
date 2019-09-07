@@ -155,8 +155,8 @@ to   : url: https://api.ignitionrobotics.org
 cd ~/catkin_ws/src
 git clone https://github.com/PX4/Firmware.git
 cd Firmware
-git submodule update --init --recursive
 git checkout v1.8.2
+git submodule update --init --recursive
 sudo apt-get install python-jinja2 -y
 make posix_sitl_default gazebo
 cd ~/catkin_ws
