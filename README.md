@@ -168,10 +168,6 @@ sudo nano ~/.bashrc
 source ~/catkin_ws/src/Firmware/Tools/setup_gazebo.bash ~/catkin_ws/Firmware ~/catkin_ws/src/Firmware/build/posix_sitl_default
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware
 export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_ws/src/Firmware/Tools/sitl_gazebo
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:~/catkin_ws/src/Firmware/build/posix_sitl_default/build_gazebo
-export GAZEBO_PLUGIN_PATH=~/catkin_ws/src/Firmware/build/px4_sitl_default/build_gazebo
-export GAZEBO_MODEL_PATH=~/catkin_ws/src/Firmware/Tools/sitl_gazebo/models
-
 ```
 - Press Ctrl+O, Enter, Ctrl+X
 ```
