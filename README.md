@@ -20,7 +20,7 @@ Gazebo, in another hand, is a powerful simation, it support every kind of applic
 Likewise, Gazebo also support vision-based application (opencv, SLAM, AI,..). Eventhough, along with its pros, gazebo requires a lot of knowledge in programming to code and operate.
 [GAZEBO](http://gazebosim.org/)
 
-In this Project, we will use Gazebo because we are iNCSL members -_- We do love challenges!
+In this Project, we will use Gazebo.
 
 #### Requirements:
 1. ROS
